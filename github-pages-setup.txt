@@ -1,27 +1,45 @@
-# 專案結構
+# GitHub Pages 部署步驟
+
+1. 首先創建以下檔案結構：
+
 ```
 test/
+├── public/
+│   └── index.html
+├── src/
+│   ├── components/
+│   │   └── ui/
+│   │       ├── button.jsx
+│   │       ├── card.jsx
+│   │       └── input.jsx
+│   ├── App.jsx
+│   ├── index.jsx
+│   └── DiceGame.jsx
 ├── .gitignore
 ├── package.json
 ├── vite.config.js
-├── index.html
-└── src/
-    ├── main.jsx
-    ├── App.jsx
-    ├── components/
-    │   └── DiceGame.jsx
-    └── styles/
-        └── globals.css
+└── README.md
 ```
 
-# .gitignore
-```
-node_modules
-dist
-.env
+2. 在各個檔案中放入以下內容：
+
+`public/index.html`:
+```html
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>擲骰子遊戲</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/index.jsx"></script>
+  </body>
+</html>
 ```
 
-# package.json
+`package.json`:
 ```json
 {
   "name": "test",
@@ -32,7 +50,6 @@ dist
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
@@ -41,128 +58,56 @@ dist
     "@radix-ui/react-slot": "^1.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
-    "lucide-react": "^0.284.0",
-    "tailwind-merge": "^1.14.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwind-merge": "^2.0.0",
+    "tailwindcss": "^3.3.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@vitejs/plugin-react": "^4.0.3",
-    "autoprefixer": "^10.4.16",
+    "autoprefixer": "^10.4.14",
     "gh-pages": "^6.0.0",
-    "postcss": "^8.4.31",
-    "tailwindcss": "^3.3.3",
+    "postcss": "^8.4.27",
     "vite": "^4.4.5"
   }
 }
 ```
 
-# vite.config.js
+`vite.config.js`:
 ```javascript
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import path from 'path'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/test/',
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
-  },
+  base: '/test/', // 這裡要改成你的 repository 名稱
 })
 ```
 
-# index.html
-```html
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>骰子遊戲</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
-</html>
+`.gitignore`:
+```
+node_modules
+dist
+dist-ssr
+*.local
 ```
 
-# src/main.jsx
-```javascript
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App'
-import './styles/globals.css'
+3. 部署步驟：
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+```bash
+# 1. 安裝依賴
+npm install
+
+# 2. 構建專案
+npm run build
+
+# 3. 部署到 GitHub Pages
+npm run deploy
 ```
 
-# src/App.jsx
-```javascript
-import DiceGame from './components/DiceGame'
+4. GitHub 配置：
 
-function App() {
-  return (
-    <div className="container mx-auto p-4">
-      <DiceGame />
-    </div>
-  )
-}
-
-export default App
-```
-
-# src/styles/globals.css
-```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-```
-
-# tailwind.config.js
-```javascript
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  darkMode: ["class"],
-  content: [
-    './pages/**/*.{js,jsx}',
-    './components/**/*.{js,jsx}',
-    './app/**/*.{js,jsx}',
-    './src/**/*.{js,jsx}',
-  ],
-  theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
-    },
-    extend: {
-      keyframes: {
-        "accordion-down": {
-          from: { height: 0 },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: 0 },
-        },
-      },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-      },
-    },
-  },
-  plugins: [require("tailwindcss-animate")],
-}
-```
+- 到 GitHub 倉庫設置 (Settings)
+- 找到 Pages 部分
+- Source 選擇 `gh-pages` 分支
+- 儲存設置
